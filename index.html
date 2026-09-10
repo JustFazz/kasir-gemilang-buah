@@ -22,6 +22,32 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
+        <!-- LAYAR KUNCI UTAMA (Mengunci Seluruh Aplikasi saat Dibuka) -->
+        <div class="app-lock-screen" id="app-lock-screen">
+            <div class="lock-card">
+                <div class="lock-icon-wrapper">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h2>Aplikasi Terkunci</h2>
+                <p>Masukkan PIN untuk mengakses aplikasi</p>
+                <input
+                    type="password"
+                    id="app-pin-input"
+                    maxlength="4"
+                    class="form-input pin-field"
+                    placeholder="••••"
+                    autocomplete="off"
+                />
+                <button
+                    type="button"
+                    class="btn btn-primary btn-block"
+                    onclick="unlockApp()"
+                >
+                    <i class="fa-solid fa-lock-open"></i> Buka Aplikasi
+                </button>
+            </div>
+        </div>
+
         <div class="app-container">
             <!-- Header & Navigasi Tab Utama -->
             <header class="app-header">
@@ -314,9 +340,17 @@
                         <!-- Item diproduksi dinamis via JS -->
                     </div>
                 </div>
-                <!-- Tombol Backup & Restore JSON -->
+                <!-- Tombol Backup Restore JSON & Reset PIN-->
                 <div class="card">
                     <div class="json-action-group">
+                        <button
+                            class="btn btn-outline-secondary"
+                            onclick="openChangePinModal()"
+                            title="Pengaturan PIN"
+                        >
+                            <i class="fa-solid fa-key"></i> Ganti PIN
+                        </button>
+
                         <button
                             type="button"
                             class="btn btn-outline-success"
@@ -340,7 +374,7 @@
                         <input
                             type="file"
                             id="json-file-input"
-                            accept="text/json"
+                            accept=".json"
                             style="display: none"
                             onchange="importJSONRestore(event)"
                         />
@@ -403,6 +437,64 @@
                         </button>
                         <button type="submit" class="btn btn-primary">
                             Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- MODAL GANTI PIN -->
+        <div class="modal-overlay" id="change-pin-modal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3><i class="fa-solid fa-key"></i> Ganti PIN Aplikasi</h3>
+                    <button class="modal-close" onclick="closeChangePinModal()">
+                        &times;
+                    </button>
+                </div>
+                <form onsubmit="handleChangePinSubmit(event)">
+                    <div class="form-group">
+                        <label>PIN Saat Ini</label>
+                        <input
+                            type="password"
+                            id="pin-old"
+                            class="form-input"
+                            maxlength="4"
+                            placeholder="••••"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label>PIN Baru (4 Digit)</label>
+                        <input
+                            type="password"
+                            id="pin-new"
+                            class="form-input"
+                            maxlength="4"
+                            placeholder="••••"
+                            required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label>Konfirmasi PIN Baru</label>
+                        <input
+                            type="password"
+                            id="pin-confirm"
+                            class="form-input"
+                            maxlength="4"
+                            placeholder="••••"
+                            required
+                        />
+                    </div>
+                    <div class="modal-actions">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            onclick="closeChangePinModal()"
+                        >
+                            Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Simpan PIN Baru
                         </button>
                     </div>
                 </form>
