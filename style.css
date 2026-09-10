@@ -12,14 +12,14 @@
     --text-primary: #1e293b;
     --text-muted: #64748b;
     --border-color: #e2e8f0;
-    
+
     --cash-color: #10b981;
     --cash-bg: #ecfdf5;
     --transfer-color: #3b82f6;
     --transfer-bg: #eff6ff;
     --out-color: #ef4444;
     --out-bg: #fef2f2;
-    
+
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
     --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
@@ -146,7 +146,9 @@ body {
     transition: all 0.2s ease;
 }
 
-.mode-btn i { font-size: 18px; }
+.mode-btn i {
+    font-size: 18px;
+}
 
 .mode-btn.cash-mode.active {
     border-color: var(--cash-color);
@@ -241,10 +243,21 @@ body {
     background: #e2e8f0;
 }
 
-.key-action { background: #f1f5f9; color: #475569; }
-.key-clear { color: var(--out-color); background: #fef2f2; }
-.key-back { color: #d97706; background: #fffbeb; }
-.key-double { font-size: 18px; }
+.key-action {
+    background: #f1f5f9;
+    color: #475569;
+}
+.key-clear {
+    color: var(--out-color);
+    background: #fef2f2;
+}
+.key-back {
+    color: #d97706;
+    background: #fffbeb;
+}
+.key-double {
+    font-size: 18px;
+}
 
 /* TOMBOL SIMPAN - DINAMIS WARNA */
 .key-submit {
@@ -259,9 +272,15 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.key-submit.cash-mode { background-color: var(--cash-color); }
-.key-submit.transfer-mode { background-color: var(--transfer-color); }
-.key-submit.out-mode { background-color: var(--out-color); }
+.key-submit.cash-mode {
+    background-color: var(--cash-color);
+}
+.key-submit.transfer-mode {
+    background-color: var(--transfer-color);
+}
+.key-submit.out-mode {
+    background-color: var(--out-color);
+}
 
 /* FITUR BARU: 3 TRANSAKSI TERAKHIR (HALAMAN INPUT) */
 .recent-card {
@@ -421,10 +440,22 @@ body {
     flex-shrink: 0;
 }
 
-.summary-card.cash .summary-icon { background: var(--cash-bg); color: var(--cash-color); }
-.summary-card.transfer .summary-icon { background: var(--transfer-bg); color: var(--transfer-color); }
-.summary-card.out .summary-icon { background: var(--out-bg); color: var(--out-color); }
-.summary-card.balance .summary-icon { background: #f3e8ff; color: #9333ea; }
+.summary-card.cash .summary-icon {
+    background: var(--cash-bg);
+    color: var(--cash-color);
+}
+.summary-card.transfer .summary-icon {
+    background: var(--transfer-bg);
+    color: var(--transfer-color);
+}
+.summary-card.out .summary-icon {
+    background: var(--out-bg);
+    color: var(--out-color);
+}
+.summary-card.balance .summary-icon {
+    background: #f3e8ff;
+    color: #9333ea;
+}
 
 .summary-info {
     display: flex;
@@ -457,7 +488,10 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
-.history-header h2 { font-size: 16px; font-weight: 700; }
+.history-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+}
 
 .badge-count {
     font-size: 12px;
@@ -472,6 +506,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    height: 360px;
     max-height: 360px;
     overflow-y: auto;
 }
@@ -500,16 +535,41 @@ body {
     text-transform: uppercase;
 }
 
-.type-badge.Cash { background: var(--cash-bg); color: var(--cash-color); }
-.type-badge.Transfer { background: var(--transfer-bg); color: var(--transfer-color); }
-.type-badge.Out { background: var(--out-bg); color: var(--out-color); }
+.type-badge.Cash {
+    background: var(--cash-bg);
+    color: var(--cash-color);
+}
+.type-badge.Transfer {
+    background: var(--transfer-bg);
+    color: var(--transfer-color);
+}
+.type-badge.Out {
+    background: var(--out-bg);
+    color: var(--out-color);
+}
 
-.item-details { display: flex; flex-direction: column; }
-.item-amount { font-size: 14px; font-weight: 700; }
-.item-note { font-size: 12px; color: var(--text-muted); }
-.item-time { font-size: 10px; color: #94a3b8; }
+.item-details {
+    display: flex;
+    flex-direction: column;
+}
+.item-amount {
+    font-size: 14px;
+    font-weight: 700;
+}
+.item-note {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.item-time {
+    font-size: 10px;
+    color: #94a3b8;
+}
 
-.item-actions { display: flex; gap: 4px; align-items: center; }
+.item-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
 
 .btn-icon {
     border: none;
@@ -521,9 +581,15 @@ body {
     color: var(--text-muted);
 }
 
-.btn-icon:hover { background: #e2e8f0; }
-.btn-icon.edit-btn:hover { color: var(--transfer-color); }
-.btn-icon.delete-btn:hover { color: var(--out-color); }
+.btn-icon:hover {
+    background: #e2e8f0;
+}
+.btn-icon.edit-btn:hover {
+    color: var(--transfer-color);
+}
+.btn-icon.delete-btn:hover {
+    color: var(--out-color);
+}
 
 /* FITUR BARU: TOMBOL VERIFIKASI TRANSFER */
 .btn-icon.verify-btn {
@@ -542,10 +608,41 @@ body {
     font-size: 13px;
 }
 
+/* GAYA TOMBOL BACKUP & RESTORE */
+.json-action-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.btn-outline-success {
+    border: 1.5px solid var(--cash-color);
+    color: var(--cash-color);
+    background: transparent;
+}
+
+.btn-outline-success:hover {
+    background: var(--cash-bg);
+}
+
+.btn-outline-danger {
+    border: 1.5px solid var(--out-color);
+    color: var(--out-color);
+    background: transparent;
+}
+
+.btn-outline-danger:hover {
+    background: var(--out-bg);
+}
+
+
 /* MODAL & TOAST */
 .modal-overlay {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: rgba(0,0,0,0.5);
     display: none;
     align-items: center;
@@ -554,7 +651,9 @@ body {
     z-index: 1000;
 }
 
-.modal-overlay.active { display: flex; }
+.modal-overlay.active {
+    display: flex;
+}
 
 .modal-card {
     background: #fff;
@@ -600,8 +699,14 @@ body {
     gap: 6px;
 }
 
-.btn-secondary { background: #e2e8f0; color: var(--text-primary); }
-.btn-primary { background: var(--transfer-color); color: #fff; }
+.btn-secondary {
+    background: #e2e8f0;
+    color: var(--text-primary);
+}
+.btn-primary {
+    background: var(--transfer-color);
+    color: #fff;
+}
 
 .toast {
     position: fixed;
@@ -619,4 +724,6 @@ body {
     z-index: 2000;
 }
 
-.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+}
