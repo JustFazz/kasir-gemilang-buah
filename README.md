@@ -1,21 +1,21 @@
 # Changelog
-v1.3 - Proteksi pin
+## v1.3 - Proteksi pin
  * Memasukkan pin setiap kali aplikasi dibuka
  * Pin bisa direset lewat halaman riwayat
-v1.2.2  - Wakelock, Backup Restore, Quick Edit
+## v1.2.2  - Wakelock, Backup Restore, Quick Edit
  * Screen Wake Lock API: Menambahkan fitur penyimpan daya mati layar (indikator ikon matahari ☀️ pada header) agar layar HP/tablet kasir tetap menyala selama digunakan.
  * Backup & Restore Total (JSON): Fitur ekspor full database ke format .json dan restore total dengan metode replace (menimpa/mengosongkan data lama) beserta modal konfirmasi peringatan.
  * Quick Edit 3 Transaksi Terakhir: Tombol edit cepat dipasang langsung pada widget riwayat di bawah kalkulator input.
-v1.2.0 - Sub-Tab Filter, Verifikasi Transfer & Fitur CSV
+## v1.2.0 - Sub-Tab Filter, Verifikasi Transfer & Fitur CSV
  * Widget 3 Transaksi Terakhir: Menampilkan ringkasan 3 transaksi terbaru di bagian bawah halaman input utama.
  * Sub-Tab Riwayat: Pembagian filter tampilan riwayat menjadi 4 kategori (All, Cash, TF, dan Out).
  * Verifikasi Transfer: Tombol ceklis verifikasi khusus transaksi Transfer untuk memastikan dana sudah benar-benar masuk ke rekening saat penutupan harian.
  * Ekspor & Impor CSV: Fitur unduh laporan harian ke CSV (dikelompokkan per jenis transaksi) dan impor data transaksi secara parsial.
-v1.1.0 - Migrasi IndexedDB & Filter Tanggal
+## v1.1.0 - Migrasi IndexedDB & Filter Tanggal
  * Penyimpanan IndexedDB: Migrasi sistem penyimpanan dari localStorage ke IndexedDB (CatatanTransaksiDB) agar data lebih aman, stabil, dan berkapasitas besar.
  * Warna Tombol Dinamis: Warna latar belakang tombol simpan berubah otomatis mengikuti jenis transaksi aktif (Hijau = Cash, Biru = Transfer, Merah = Out).
  * Date Picker Riwayat: Fitur pemilih tanggal harian untuk menyaring laporan dan perhitungan statistik secara spesifik.
-v1.0.0 - Rilis Awal Aplikasi Transaksi
+## v1.0.0 - Rilis Awal Aplikasi Transaksi
  * Antarmuka Keypad Numerik: Input nominal menggunakan tombol kalkulator interaktif (0-9, 00, Clear, Backspace).
  * 3 Mode Input: Dukungan transaksi Cash, Transfer, dan Out.
  * Keterangan Dinamis: Kolom teks keterangan otomatis muncul khusus saat mode Out dipilih.
