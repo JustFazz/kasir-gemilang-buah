@@ -157,6 +157,32 @@ function switchTab(tabName) {
     }
 }
 
+// STATE PIN
+let appPin = localStorage.getItem("app_pin") || "1234";
+
+// KUNCI APLIKASI SAAT PERTAMA KALI DIBUKA
+document.addEventListener("DOMContentLoaded", async () => {
+    // Tampilkan layar kunci
+    document.getElementById("app-lock-screen").style.display = "flex";
+
+    document.getElementById("history-date-picker").value = getTodayDateString();
+    updateDisplay();
+    await seedInitialDataIfEmpty();
+});
+
+// BUKA KUNCI APLIKASI UTAMA
+function unlockApp() {
+    const input = document.getElementById("app-pin-input").value;
+    if (input === appPin) {
+        document.getElementById("app-lock-screen").style.display = "none";
+        document.getElementById("app-pin-input").value = "";
+        showToast("Aplikasi Berhasil Dibuka");
+    } else {
+        showToast("PIN Salah!");
+        document.getElementById("app-pin-input").value = "";
+    }
+}
+
 // FITUR BARU: GANTI SUB-TAB RIWAYAT (All, Cash, Transfer, Out)
 function setSubTab(subTab) {
     currentSubTab = subTab;
@@ -531,6 +557,48 @@ function importCSV(e) {
     };
     reader.readAsText(file);
 }
+
+// MODAL GANTI PIN
+function openChangePinModal() {
+    document.getElementById("pin-old").value = "";
+    document.getElementById("pin-new").value = "";
+    document.getElementById("pin-confirm").value = "";
+    document.getElementById("change-pin-modal").classList.add("active");
+}
+
+function closeChangePinModal() {
+    document.getElementById("change-pin-modal").classList.remove("active");
+}
+
+function handleChangePinSubmit(e) {
+    e.preventDefault();
+    const oldPin = document.getElementById("pin-old").value;
+    const newPin = document.getElementById("pin-new").value;
+    const confirmPin = document.getElementById("pin-confirm").value;
+
+    if (oldPin !== appPin) {
+        showToast("PIN saat ini tidak sesuai!");
+        return;
+    }
+
+    if (newPin.length !== 4 || isNaN(newPin)) {
+        showToast("PIN Baru harus 4 digit angka!");
+        return;
+    }
+
+    if (newPin !== confirmPin) {
+        showToast("Konfirmasi PIN Baru tidak cocok!");
+        return;
+    }
+
+    // Simpan PIN Baru ke LocalStorage
+    appPin = newPin;
+    localStorage.setItem("app_pin", newPin);
+
+    closeChangePinModal();
+    showToast("PIN Aplikasi berhasil diperbarui!");
+}
+
 // BACKUP JSON
 async function exportJSONBackup() {
     try {
