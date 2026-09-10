@@ -3,7 +3,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family:
+        "Plus Jakarta Sans",
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
 }
 
 :root {
@@ -20,9 +24,9 @@
     --out-color: #ef4444;
     --out-bg: #fef2f2;
 
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-    --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
     --radius-lg: 16px;
     --radius-md: 12px;
     --radius-sm: 8px;
@@ -35,6 +39,79 @@ body {
     justify-content: center;
     min-height: 100vh;
     padding: 16px;
+}
+
+/* LAYAR KUNCI FULLSCREEN */
+.app-lock-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #0f172a;
+    color: #ffffff;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.lock-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: var(--radius-lg);
+    padding: 30px 24px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.lock-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: #334155;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 28px;
+    color: var(--transfer-color);
+}
+
+.lock-card h2 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+.lock-card p {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+
+.pin-field {
+    text-align: center;
+    font-size: 26px !important;
+    letter-spacing: 12px;
+    margin-bottom: 16px;
+    background: #0f172a !important;
+    color: #fff !important;
+    border-color: #475569 !important;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+}
+.pin-default-hint {
+    font-size: 11px !important;
+    color: #64748b;
+    margin-top: 16px;
+    margin-bottom: 0 !important;
 }
 
 /* APP CONTAINER */
@@ -205,7 +282,8 @@ body {
     font-weight: 600;
 }
 
-.form-group input, .form-input {
+.form-group input,
+.form-input {
     width: 100%;
     padding: 12px 14px;
     border: 1.5px solid var(--border-color);
@@ -214,7 +292,8 @@ body {
     outline: none;
 }
 
-.form-group input:focus, .form-input:focus {
+.form-group input:focus,
+.form-input:focus {
     border-color: var(--transfer-color);
 }
 
@@ -635,7 +714,6 @@ body {
     background: var(--out-bg);
 }
 
-
 /* MODAL & TOAST */
 .modal-overlay {
     position: fixed;
@@ -643,7 +721,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: none;
     align-items: center;
     justify-content: center;
