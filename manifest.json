@@ -1,7 +1,7 @@
 {
-    "name": "Catatan Transaksi",
-    "short_name": "Transaksi",
-    "description": "Aplikasi pencatat transaksi sederhana",
+    "name": "Kasir Gemilang Buah",
+    "short_name": "Kasir",
+    "description": "Aplikasi kasir gemilang buah",
     "start_url": "./",
     "scope": "./",
     "display": "standalone",
