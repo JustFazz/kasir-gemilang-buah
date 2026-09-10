@@ -1,249 +1,434 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Pencatat Transaksi</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#3b82f6">
-    <meta name="mobile-web-app-capable" content="yes">
-    <!-- Google Fonts & FontAwesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="app-container">
-        <!-- Header & Navigasi Tab Utama -->
-        <header class="app-header">
-            <div class="header-title">
-                <i class="fa-solid fa-wallet logo-icon"></i>
-                <h1>Catatan Transaksi</h1>
-            </div>
-            <nav class="nav-tabs">
-                <button class="tab-btn active" id="tab-input-btn" onclick="switchTab('input')">
-                    <i class="fa-solid fa-calculator"></i>
-                    <span>Input</span>
-                </button>
-                <button class="tab-btn" id="tab-riwayat-btn" onclick="switchTab('riwayat')">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <span>Riwayat</span>
-                </button>
-            </nav>
-        </header>
-
-        <!-- HALAMAN 1: INPUT TRANSAKSI -->
-        <main id="page-input" class="page-content active">
-            <div class="card input-card">
-                <!-- Mode Selector -->
-                <div class="mode-selector">
-                    <button type="button" class="mode-btn active cash-mode" onclick="setMode('Cash')">
-                        <i class="fa-solid fa-money-bill-wave"></i>
-                        <span>Cash</span>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Aplikasi Pencatat Transaksi</title>
+        <link rel="manifest" href="manifest.json" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <!-- Google Fonts & FontAwesome -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <div class="app-container">
+            <!-- Header & Navigasi Tab Utama -->
+            <header class="app-header">
+                <div class="header-title">
+                    <i class="fa-solid fa-wallet logo-icon"></i>
+                    <h1>Catatan Transaksi</h1>
+                </div>
+                <nav class="nav-tabs">
+                    <button
+                        class="tab-btn active"
+                        id="tab-input-btn"
+                        onclick="switchTab('input')"
+                    >
+                        <i class="fa-solid fa-calculator"></i>
+                        <span>Input</span>
                     </button>
-                    <button type="button" class="mode-btn transfer-mode" onclick="setMode('Transfer')">
-                        <i class="fa-solid fa-building-columns"></i>
-                        <span>Transfer</span>
+                    <button
+                        class="tab-btn"
+                        id="tab-riwayat-btn"
+                        onclick="switchTab('riwayat')"
+                    >
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>Riwayat</span>
                     </button>
-                    <button type="button" class="mode-btn out-mode" onclick="setMode('Out')">
-                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                        <span>Out</span>
+                </nav>
+            </header>
+
+            <!-- HALAMAN 1: INPUT TRANSAKSI -->
+            <main id="page-input" class="page-content active">
+                <div class="card input-card">
+                    <!-- Mode Selector -->
+                    <div class="mode-selector">
+                        <button
+                            type="button"
+                            class="mode-btn active cash-mode"
+                            onclick="setMode('Cash')"
+                        >
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                            <span>Cash</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="mode-btn transfer-mode"
+                            onclick="setMode('Transfer')"
+                        >
+                            <i class="fa-solid fa-building-columns"></i>
+                            <span>Transfer</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="mode-btn out-mode"
+                            onclick="setMode('Out')"
+                        >
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                            <span>Out</span>
+                        </button>
+                    </div>
+
+                    <!-- Display Nominal -->
+                    <div class="display-container">
+                        <span class="display-label"
+                            >Nominal Transaksi (<span id="active-mode-label"
+                                >Cash</span
+                            >)</span
+                        >
+                        <div class="display-value" id="display-amount">
+                            Rp 0
+                        </div>
+                    </div>
+
+                    <!-- Input Keterangan (Dinamis untuk mode Out) -->
+                    <div
+                        class="form-group"
+                        id="group-keterangan"
+                        style="display: none"
+                    >
+                        <label for="input-keterangan">
+                            <i class="fa-solid fa-pen-to-square"></i> Keterangan
+                            Pengeluaran
+                        </label>
+                        <input
+                            type="text"
+                            id="input-keterangan"
+                            placeholder="Contoh: Makan siang, Bensin, Token listrik..."
+                            maxlength="50"
+                        />
+                    </div>
+
+                    <!-- Keypad Kalkulator -->
+                    <div class="keypad-grid">
+                        <button class="key-btn" onclick="pressKey('7')">
+                            7
+                        </button>
+                        <button class="key-btn" onclick="pressKey('8')">
+                            8
+                        </button>
+                        <button class="key-btn" onclick="pressKey('9')">
+                            9
+                        </button>
+                        <button
+                            class="key-btn key-action key-clear"
+                            onclick="pressKey('C')"
+                        >
+                            C
+                        </button>
+
+                        <button class="key-btn" onclick="pressKey('4')">
+                            4
+                        </button>
+                        <button class="key-btn" onclick="pressKey('5')">
+                            5
+                        </button>
+                        <button class="key-btn" onclick="pressKey('6')">
+                            6
+                        </button>
+                        <button
+                            class="key-btn key-action key-back"
+                            onclick="pressKey('BACK')"
+                        >
+                            <i class="fa-solid fa-backspace"></i>
+                        </button>
+
+                        <button class="key-btn" onclick="pressKey('1')">
+                            1
+                        </button>
+                        <button class="key-btn" onclick="pressKey('2')">
+                            2
+                        </button>
+                        <button class="key-btn" onclick="pressKey('3')">
+                            3
+                        </button>
+                        <button
+                            class="key-btn key-double"
+                            onclick="pressKey('00')"
+                        >
+                            00
+                        </button>
+
+                        <button class="key-btn" onclick="pressKey('0')">
+                            0
+                        </button>
+                        <button
+                            class="key-btn key-submit cash-mode"
+                            id="btn-save"
+                            onclick="saveTransaction()"
+                        >
+                            <i class="fa-solid fa-check"></i> Simpan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FITUR BARU: 3 Transaksi Terakhir di Bawah Halaman Input -->
+                <div class="card recent-card">
+                    <div class="recent-header">
+                        <h3>
+                            <i class="fa-solid fa-clock-rotate-left"></i> 3
+                            Transaksi Terakhir
+                        </h3>
+                    </div>
+                    <div class="recent-list" id="recent-list">
+                        <!-- Item diproduksi lewat JS -->
+                    </div>
+                </div>
+            </main>
+
+            <!-- HALAMAN 2: RIWAYAT TRANSAKSI -->
+            <main id="page-riwayat" class="page-content">
+                <!-- Filter Tanggal & Tombol Ekspor/Impor CSV -->
+                <div class="card action-bar-card">
+                    <div class="date-filter-group">
+                        <label for="history-date-picker">
+                            <i class="fa-regular fa-calendar-days"></i> Pilih
+                            Tanggal:
+                        </label>
+                        <input
+                            type="date"
+                            id="history-date-picker"
+                            onchange="renderHistory()"
+                        />
+                    </div>
+
+                    <div class="csv-actions">
+                        <button
+                            class="btn btn-outline-primary"
+                            onclick="exportCSV()"
+                        >
+                            <i class="fa-solid fa-file-export"></i> Ekspor CSV
+                        </button>
+                        <button
+                            class="btn btn-outline-secondary"
+                            onclick="
+                                document
+                                    .getElementById('csv-file-input')
+                                    .click()
+                            "
+                        >
+                            <i class="fa-solid fa-file-import"></i> Impor CSV
+                        </button>
+                        <input
+                            type="file"
+                            id="csv-file-input"
+                            accept="text/csv"
+                            style="display: none"
+                            onchange="importCSV(event)"
+                        />
+                    </div>
+                </div>
+
+                <!-- FITUR BARU: Sub-Tab Riwayat (All, Cash, TF, Out) -->
+                <div class="sub-tabs-container">
+                    <button
+                        class="sub-tab-btn active"
+                        id="subtab-all"
+                        onclick="setSubTab('all')"
+                    >
+                        All
+                    </button>
+                    <button
+                        class="sub-tab-btn"
+                        id="subtab-cash"
+                        onclick="setSubTab('Cash')"
+                    >
+                        Cash
+                    </button>
+                    <button
+                        class="sub-tab-btn"
+                        id="subtab-transfer"
+                        onclick="setSubTab('Transfer')"
+                    >
+                        TF
+                    </button>
+                    <button
+                        class="sub-tab-btn"
+                        id="subtab-out"
+                        onclick="setSubTab('Out')"
+                    >
+                        Out
                     </button>
                 </div>
 
-                <!-- Display Nominal -->
-                <div class="display-container">
-                    <span class="display-label">Nominal Transaksi (<span id="active-mode-label">Cash</span>)</span>
-                    <div class="display-value" id="display-amount">
-                        Rp 0
+                <!-- Ringkasan Statistik Berdasarkan Tanggal & Sub-tab -->
+                <div class="summary-grid">
+                    <div class="summary-card cash">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+                        <div class="summary-info">
+                            <span class="summary-label">Total Cash</span>
+                            <h3 id="stat-total-cash">Rp 0</h3>
+                        </div>
+                    </div>
+                    <div class="summary-card transfer">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-building-columns"></i>
+                        </div>
+                        <div class="summary-info">
+                            <span class="summary-label">Total Transfer</span>
+                            <h3 id="stat-total-transfer">Rp 0</h3>
+                        </div>
+                    </div>
+                    <div class="summary-card out">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-arrow-trend-down"></i>
+                        </div>
+                        <div class="summary-info">
+                            <span class="summary-label">Total Pengeluaran</span>
+                            <h3 id="stat-total-out">Rp 0</h3>
+                        </div>
+                    </div>
+                    <div class="summary-card balance">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <div class="summary-info">
+                            <span class="summary-label">Sisa Cash</span>
+                            <h3 id="stat-balance">Rp 0</h3>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Input Keterangan (Dinamis untuk mode Out) -->
-                <div class="form-group" id="group-keterangan" style="display: none;">
-                    <label for="input-keterangan">
-                        <i class="fa-solid fa-pen-to-square"></i> Keterangan Pengeluaran
-                    </label>
-                    <input type="text" id="input-keterangan" placeholder="Contoh: Makan siang, Bensin, Token listrik..." maxlength="50">
-                </div>
-
-                <!-- Keypad Kalkulator -->
-                <div class="keypad-grid">
-                    <button class="key-btn" onclick="pressKey('7')">7</button>
-                    <button class="key-btn" onclick="pressKey('8')">8</button>
-                    <button class="key-btn" onclick="pressKey('9')">9</button>
-                    <button class="key-btn key-action key-clear" onclick="pressKey('C')">C</button>
-
-                    <button class="key-btn" onclick="pressKey('4')">4</button>
-                    <button class="key-btn" onclick="pressKey('5')">5</button>
-                    <button class="key-btn" onclick="pressKey('6')">6</button>
-                    <button class="key-btn key-action key-back" onclick="pressKey('BACK')">
-                        <i class="fa-solid fa-backspace"></i>
-                    </button>
-
-                    <button class="key-btn" onclick="pressKey('1')">1</button>
-                    <button class="key-btn" onclick="pressKey('2')">2</button>
-                    <button class="key-btn" onclick="pressKey('3')">3</button>
-                    <button class="key-btn key-double" onclick="pressKey('00')">00</button>
-
-                    <button class="key-btn" onclick="pressKey('0')">0</button>
-                    <button class="key-btn key-submit cash-mode" id="btn-save" onclick="saveTransaction()">
-                        <i class="fa-solid fa-check"></i> Simpan
-                    </button>
-                </div>
-            </div>
-
-            <!-- FITUR BARU: 3 Transaksi Terakhir di Bawah Halaman Input -->
-            <div class="card recent-card">
-                <div class="recent-header">
-                    <h3><i class="fa-solid fa-clock-rotate-left"></i> 3 Transaksi Terakhir</h3>
-                </div>
-                <div class="recent-list" id="recent-list">
-                    <!-- Item diproduksi lewat JS -->
-                </div>
-            </div>
-        </main>
-
-        <!-- HALAMAN 2: RIWAYAT TRANSAKSI -->
-        <main id="page-riwayat" class="page-content">
-            <!-- Filter Tanggal & Tombol Ekspor/Impor CSV -->
-            <div class="card action-bar-card">
-                <div class="date-filter-group">
-                    <label for="history-date-picker">
-                        <i class="fa-regular fa-calendar-days"></i> Pilih Tanggal:
-                    </label>
-                    <input type="date" id="history-date-picker" onchange="renderHistory()">
-                </div>
-
-                <div class="csv-actions">
-                    <button class="btn btn-outline-primary" onclick="exportCSV()">
-                        <i class="fa-solid fa-file-export"></i> Ekspor CSV
-                    </button>
-                    <button class="btn btn-outline-secondary" onclick="document.getElementById('csv-file-input').click()">
-                        <i class="fa-solid fa-file-import"></i> Impor CSV
-                    </button>
-                    <input type="file" id="csv-file-input" style="display: none;" onchange="importCSV(event)">
-                </div>
-            </div>
-
-            <!-- FITUR BARU: Sub-Tab Riwayat (All, Cash, TF, Out) -->
-            <div class="sub-tabs-container">
-                <button class="sub-tab-btn active" id="subtab-all" onclick="setSubTab('all')">All</button>
-                <button class="sub-tab-btn" id="subtab-cash" onclick="setSubTab('Cash')">Cash</button>
-                <button class="sub-tab-btn" id="subtab-transfer" onclick="setSubTab('Transfer')">TF</button>
-                <button class="sub-tab-btn" id="subtab-out" onclick="setSubTab('Out')">Out</button>
-            </div>
-
-            <!-- Ringkasan Statistik Berdasarkan Tanggal & Sub-tab -->
-            <div class="summary-grid">
-                <div class="summary-card cash">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-money-bill-wave"></i>
+                <!-- Daftar Catatan Riwayat Tanggal Terpilih -->
+                <div class="card history-card">
+                    <div class="history-header">
+                        <h2>Daftar Transaksi</h2>
+                        <span class="badge-count" id="history-count"
+                            >0 Catatan</span
+                        >
                     </div>
-                    <div class="summary-info">
-                        <span class="summary-label">Total Cash</span>
-                        <h3 id="stat-total-cash">Rp 0</h3>
+                    <div class="history-list" id="history-list">
+                        <!-- Item diproduksi dinamis via JS -->
                     </div>
                 </div>
-                <div class="summary-card transfer">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-building-columns"></i>
+                <!-- Tombol Backup & Restore JSON -->
+                <div class="card">
+                    <div class="json-action-group">
+                        <button
+                            type="button"
+                            class="btn btn-outline-success"
+                            onclick="exportJSONBackup()"
+                            title="Backup Seluruh Data"
+                        >
+                            <i class="fa-solid fa-download"></i> Backup JSON
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-outline-danger"
+                            onclick="
+                                document
+                                    .getElementById('json-file-input')
+                                    .click()
+                            "
+                            title="Restore Seluruh Data"
+                        >
+                            <i class="fa-solid fa-upload"></i> Restore JSON
+                        </button>
+                        <input
+                            type="file"
+                            id="json-file-input"
+                            accept=".json"
+                            style="display: none"
+                            onchange="importJSONRestore(event)"
+                        />
                     </div>
-                    <div class="summary-info">
-                        <span class="summary-label">Total Transfer</span>
-                        <h3 id="stat-total-transfer">Rp 0</h3>
-                    </div>
                 </div>
-                <div class="summary-card out">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-arrow-trend-down"></i>
-                    </div>
-                    <div class="summary-info">
-                        <span class="summary-label">Total Pengeluaran</span>
-                        <h3 id="stat-total-out">Rp 0</h3>
-                    </div>
-                </div>
-                <div class="summary-card balance">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-scale-balanced"></i>
-                    </div>
-                    <div class="summary-info">
-                        <span class="summary-label">Sisa Cash</span>
-                        <h3 id="stat-balance">Rp 0</h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Daftar Catatan Riwayat Tanggal Terpilih -->
-            <div class="card history-card">
-                <div class="history-header">
-                    <h2>Daftar Transaksi</h2>
-                    <span class="badge-count" id="history-count">0 Catatan</span>
-                </div>
-                <div class="history-list" id="history-list">
-                    <!-- Item diproduksi dinamis via JS -->
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- MODAL EDIT TRANSAKSI -->
-    <div class="modal-overlay" id="edit-modal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-pen-to-square"></i> Edit Transaksi</h3>
-                <button class="modal-close" onclick="closeEditModal()">&times;</button>
-            </div>
-            <form id="edit-form" onsubmit="handleEditSubmit(event)">
-                <input type="hidden" id="edit-id">
-
-                <div class="form-group">
-                    <label>Jenis Transaksi</label>
-                    <select id="edit-type" class="form-input">
-                        <option value="Cash">Cash</option>
-                        <option value="Transfer">Transfer</option>
-                        <option value="Out">Out (Pengeluaran)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Nominal (Rp)</label>
-                    <input type="number" id="edit-amount" class="form-input" min="1" required>
-                </div>
-
-                <div class="form-group" id="edit-keterangan-group">
-                    <label>Keterangan</label>
-                    <input type="text" id="edit-keterangan" class="form-input" placeholder="Keterangan transaksi">
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                </div>
-            </form>
+            </main>
         </div>
-    </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        Notifikasi
-    </div>
+        <!-- MODAL EDIT TRANSAKSI -->
+        <div class="modal-overlay" id="edit-modal">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Transaksi
+                    </h3>
+                    <button class="modal-close" onclick="closeEditModal()">
+                        &times;
+                    </button>
+                </div>
+                <form id="edit-form" onsubmit="handleEditSubmit(event)">
+                    <input type="hidden" id="edit-id" />
 
-    <script src="script.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                .then(registration => {
-                    console.log('Service Worker aktif:', registration.scope);
-                })
-                .catch(error => {
-                    console.error('Service Worker gagal:', error);
+                    <div class="form-group">
+                        <label>Jenis Transaksi</label>
+                        <select id="edit-type" class="form-input">
+                            <option value="Cash">Cash</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Out">Out (Pengeluaran)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nominal (Rp)</label>
+                        <input
+                            type="number"
+                            id="edit-amount"
+                            class="form-input"
+                            min="1"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group" id="edit-keterangan-group">
+                        <label>Keterangan</label>
+                        <input
+                            type="text"
+                            id="edit-keterangan"
+                            class="form-input"
+                            placeholder="Keterangan transaksi"
+                        />
+                    </div>
+
+                    <div class="modal-actions">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            onclick="closeEditModal()"
+                        >
+                            Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast">Notifikasi</div>
+
+        <script src="script.js"></script>
+        <script>
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker
+                        .register("./service-worker.js")
+                        .then((registration) => {
+                            console.log(
+                                "Service Worker aktif:",
+                                registration.scope,
+                            );
+                        })
+                        .catch((error) => {
+                            console.error("Service Worker gagal:", error);
+                        });
                 });
-            });
-        }
-    </script>
-</body>
+            }
+        </script>
+    </body>
 </html>
