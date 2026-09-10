@@ -531,3 +531,22 @@ function showToast(message) {
         toast.classList.remove('show');
     }, 2500);
 }
+
+// WAKELOCK
+let wakeLock;
+
+async function keepScreenOn() {
+    try {
+        wakeLock = await navigator.wakeLock.request("screen");
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+keepScreenOn();
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        keepScreenOn();
+    }
+});
