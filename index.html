@@ -106,6 +106,30 @@
                         </button>
                     </div>
 
+                    <!-- Sub-Selector Mode Transfer (QRIS & Bank) -->
+                    <div
+                        class="transfer-type-selector"
+                        id="group-transfer-type"
+                        style="display: none"
+                    >
+                        <button
+                            type="button"
+                            class="transfer-type-btn active"
+                            id="btn-transfer-qris"
+                            onclick="setTransferType('qris')"
+                        >
+                            <i class="fa-solid fa-qrcode"></i> QRIS
+                        </button>
+                        <button
+                            type="button"
+                            class="transfer-type-btn"
+                            id="btn-transfer-bank"
+                            onclick="setTransferType('bank')"
+                        >
+                            <i class="fa-solid fa-building-columns"></i> Bank
+                        </button>
+                    </div>
+
                     <!-- Display Nominal -->
                     <div class="display-container">
                         <span class="display-label"
@@ -256,8 +280,8 @@
                     </div>
                 </div>
 
-                <!-- FITUR BARU: Sub-Tab Riwayat (All, Cash, TF, Out) -->
-                <div class="sub-tabs-container">
+                <!-- Sub-Tabs Filter Riwayat -->
+                <div class="sub-tabs-container five-tabs">
                     <button
                         class="sub-tab-btn active"
                         id="subtab-all"
@@ -274,10 +298,17 @@
                     </button>
                     <button
                         class="sub-tab-btn"
-                        id="subtab-transfer"
-                        onclick="setSubTab('Transfer')"
+                        id="subtab-qris"
+                        onclick="setSubTab('QRIS')"
                     >
-                        TF
+                        QRIS
+                    </button>
+                    <button
+                        class="sub-tab-btn"
+                        id="subtab-bank"
+                        onclick="setSubTab('Bank')"
+                    >
+                        Bank
                     </button>
                     <button
                         class="sub-tab-btn"
@@ -288,8 +319,17 @@
                     </button>
                 </div>
 
-                <!-- Ringkasan Statistik Berdasarkan Tanggal & Sub-tab -->
+                <!-- Summary Cards Baru -->
                 <div class="summary-grid">
+                    <div class="summary-card total-pemasukan full-width">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                        </div>
+                        <div class="summary-info">
+                            <span class="summary-label">Total Omzet</span>
+                            <h3 id="stat-total-pemasukan">Rp 0</h3>
+                        </div>
+                    </div>
                     <div class="summary-card cash">
                         <div class="summary-icon">
                             <i class="fa-solid fa-money-bill-wave"></i>
@@ -299,13 +339,22 @@
                             <h3 id="stat-total-cash">Rp 0</h3>
                         </div>
                     </div>
+                    <div class="summary-card qris">
+                        <div class="summary-icon">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <div class="summary-info">
+                            <span class="summary-label">Total QRIS</span>
+                            <h3 id="stat-total-qris">Rp 0</h3>
+                        </div>
+                    </div>
                     <div class="summary-card transfer">
                         <div class="summary-icon">
                             <i class="fa-solid fa-building-columns"></i>
                         </div>
                         <div class="summary-info">
-                            <span class="summary-label">Total Transfer</span>
-                            <h3 id="stat-total-transfer">Rp 0</h3>
+                            <span class="summary-label">Total Bank</span>
+                            <h3 id="stat-total-bank">Rp 0</h3>
                         </div>
                     </div>
                     <div class="summary-card out">
@@ -313,16 +362,18 @@
                             <i class="fa-solid fa-arrow-trend-down"></i>
                         </div>
                         <div class="summary-info">
-                            <span class="summary-label">Total Pengeluaran</span>
+                            <span class="summary-label">Total Out</span>
                             <h3 id="stat-total-out">Rp 0</h3>
                         </div>
                     </div>
-                    <div class="summary-card balance">
+                    <div class="summary-card balance full-width">
                         <div class="summary-icon">
                             <i class="fa-solid fa-scale-balanced"></i>
                         </div>
                         <div class="summary-info">
-                            <span class="summary-label">Sisa Cash</span>
+                            <span class="summary-label"
+                                >Sisa Cash (Cash - Out)</span
+                            >
                             <h3 id="stat-balance">Rp 0</h3>
                         </div>
                     </div>
@@ -401,7 +452,12 @@
                         <label>Jenis Transaksi</label>
                         <select id="edit-type" class="form-input">
                             <option value="Cash">Cash</option>
-                            <option value="Transfer">Transfer</option>
+                            <option value="Transfer-qris">
+                                Transfer (QRIS)
+                            </option>
+                            <option value="Transfer-bank">
+                                Transfer (Bank)
+                            </option>
                             <option value="Out">Out (Pengeluaran)</option>
                         </select>
                     </div>
@@ -442,6 +498,7 @@
                 </form>
             </div>
         </div>
+
         <!-- MODAL GANTI PIN -->
         <div class="modal-overlay" id="change-pin-modal">
             <div class="modal-card">
