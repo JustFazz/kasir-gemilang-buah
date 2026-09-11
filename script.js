@@ -245,6 +245,7 @@ function pressKey(key) {
             rawAmount += key;
         }
     }
+    playSound("click");
     updateDisplay();
 }
 
@@ -305,7 +306,8 @@ async function saveTransaction() {
     document.getElementById("input-keterangan").value = "";
 
     renderRecentTransactions();
-    setMode('Cash')
+    playSound("success")
+    setMode('Cash');
     showToast("Transaksi berhasil disimpan!");
 }
 
@@ -732,7 +734,20 @@ async function handleEditSubmit(e) {
         showToast("Transaksi berhasil diperbarui!");
     }
 }
+// SOUND EFFECT
+const sounds = {
+    click: new Audio('./sounds/click.wav'),
+    success: new Audio("./sounds/success.mp3")
+};
 
+function playSound(name) {
+    const sound = sounds[name];
+
+    if (!sound) return;
+
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+}
 // NOTIFIKASI TOAST
 const toastQueue = [];
 let toastShowing = false;
