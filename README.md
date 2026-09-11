@@ -1,7 +1,8 @@
 # Changelog
-## v1.3 - Proteksi pin
+## v1.3 - Proteksi pin, Ubah mode tiap simpan
  * Memasukkan pin setiap kali aplikasi dibuka
  * Pin bisa direset lewat halaman riwayat
+ * Mode akan otomatis berganti ke Cash saat disimpan
 ## v1.2.2  - Wakelock, Backup Restore, Quick Edit
  * Screen Wake Lock API: Menambahkan fitur penyimpan daya mati layar (indikator ikon matahari ☀️ pada header) agar layar HP/tablet kasir tetap menyala selama digunakan.
  * Backup & Restore Total (JSON): Fitur ekspor full database ke format .json dan restore total dengan metode replace (menimpa/mengosongkan data lama) beserta modal konfirmasi peringatan.
