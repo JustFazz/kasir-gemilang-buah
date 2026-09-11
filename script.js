@@ -305,6 +305,7 @@ async function saveTransaction() {
     document.getElementById("input-keterangan").value = "";
 
     renderRecentTransactions();
+    setMode('Cash')
     showToast("Transaksi berhasil disimpan!");
 }
 
