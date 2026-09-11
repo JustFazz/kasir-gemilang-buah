@@ -1,7 +1,11 @@
 # Changelog
-## v1.3.1 - Sound Effect
+Next - Future Plan
+ * Bisa diakses lewat hp lain diluar jaringan
+ * Hilangkan fitur edit nominal dan hapus transaksi 
+## v1.3.1 - 
+ * Bagi jenis transaksi TF menjadi QRIS dan Bank
  * Tambah suara keypad dan notif tersimpan
-## v1.3 - Proteksi pin, Ubah mode tiap simpan
+## v1.3 - Proteksi pin, 
  * Memasukkan pin setiap kali aplikasi dibuka
  * Pin bisa direset lewat halaman riwayat
  * Mode akan otomatis berganti ke Cash saat disimpan
