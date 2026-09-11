@@ -1,4 +1,6 @@
 # Changelog
+## v1.3.1 - Sound Effect
+ * Tambah suara keypad dan notif tersimpan
 ## v1.3 - Proteksi pin, Ubah mode tiap simpan
  * Memasukkan pin setiap kali aplikasi dibuka
  * Pin bisa direset lewat halaman riwayat
