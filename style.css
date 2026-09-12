@@ -41,6 +41,15 @@ body {
     padding: 16px;
 }
 
+button,
+a,
+input,
+textarea,
+select {
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+}
+
 /* LAYAR KUNCI FULLSCREEN */
 .app-lock-screen {
     position: fixed;
