@@ -19,6 +19,8 @@
 
     --cash-color: #10b981;
     --cash-bg: #ecfdf5;
+    --order-color: #1e293b;
+    --order-bg: #dee1e5;
     --transfer-color: #3b82f6;
     --transfer-bg: #eff6ff;
     --out-color: #ef4444;
@@ -32,15 +34,6 @@
     --radius-sm: 8px;
 }
 
-body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 16px;
-}
-
 button,
 a,
 input,
@@ -48,6 +41,15 @@ textarea,
 select {
     -webkit-tap-highlight-color: transparent;
     tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 16px;
 }
 
 /* LAYAR KUNCI FULLSCREEN */
@@ -670,6 +672,10 @@ select {
 .type-badge.Cash {
     background: var(--cash-bg);
     color: var(--cash-color);
+}
+.type-badge.Order {
+    background: var(--order-bg);
+    color: var(--order-color);
 }
 .type-badge.Transfer {
     background: var(--transfer-bg);

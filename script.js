@@ -195,8 +195,8 @@ function setSubTab(subTab) {
         document.getElementById("subtab-all").classList.add("active");
     if (subTab === "Cash")
         document.getElementById("subtab-cash").classList.add("active");
-    if (subTab === "Transfer")
-        document.getElementById("subtab-transfer").classList.add("active");
+    if (subTab === "QRIS")
+        document.getElementById("subtab-qris").classList.add("active");
     if (subTab === "Bank")
         document.getElementById("subtab-bank").classList.add("active");
     if (subTab === "Out")
@@ -286,6 +286,10 @@ async function saveTransaction() {
 
     const noteInput = document.getElementById("input-keterangan").value.trim();
     let note = noteInput;
+    if (currentMode === "Out" && !note) {
+        showToast("Harap isi keterangan pengeluaran!");
+        return;
+    }
     if (!note) {
         if (currentMode === "Cash") note = "Pemasukan Cash";
         else if (currentMode === "Transfer")
