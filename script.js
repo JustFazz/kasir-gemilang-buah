@@ -316,7 +316,7 @@ async function saveTransaction() {
     document.getElementById("input-keterangan").value = "";
     renderRecentTransactions();
     playSound("success");
-    setMode("cash");
+    setMode("Cash");
     showToast("Transaksi berhasil disimpan!");
 }
 
