@@ -5,7 +5,9 @@ const APP_SHELL = [
     './index.html',
     './style.css',
     './script.js',
-    './manifest.json'
+    './manifest.json',
+    './sounds/click.mp3',
+    './sounds/success.mp3'
 ];
 
 // Install
