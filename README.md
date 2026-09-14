@@ -2,15 +2,17 @@
 Next - Future Plan
  * Bisa diakses lewat hp lain diluar jaringan
  * Hilangkan fitur edit nominal dan hapus transaksi
+## v2.1 - Penerapan Awal Online
+ * Membuat proses sync ke production test
 ## v2 - Pengoptimalan & persiapan online state
  * Pengoptimalan Service Worker
  * Memecah Script dan HTML menjadi komponen
  * Update suara keypad & matikan
  * Rancangan persiapan Firebase sync
-## v1.3.1 - 
+## v1.3.1 - Bank & Sound
  * Bagi jenis transaksi TF menjadi QRIS dan Bank
  * Tambah suara keypad dan notif tersimpan
-## v1.3 - Proteksi pin, 
+## v1.3 - Proteksi pin
  * Memasukkan pin setiap kali aplikasi dibuka
  * Pin bisa direset lewat halaman riwayat
  * Mode akan otomatis berganti ke Cash saat disimpan

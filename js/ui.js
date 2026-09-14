@@ -6,44 +6,37 @@ import {
     getTodayDateString,
 } from "./utils.js";
 import { dbAdd, dbGetAll, dbUpdate, dbDelete } from "./db.js";
-import { addToSyncQueue } from "./sync.js";
+import { addToSyncQueue, processPendingSyncQueue } from "./sync.js";
+
+// ==========================================================================
+// 1. NAVIGASI TAB & MODE
+// ==========================================================================
 
 export function switchTab(tabName) {
-    document
-        .querySelectorAll(".tab-btn")
-        .forEach((btn) => btn.classList.remove("active"));
-    document
-        .querySelectorAll(".page-content")
-        .forEach((page) => page.classList.remove("active"));
+    const isInput = tabName === "input";
 
-    if (tabName === "input") {
-        document.getElementById("tab-input-btn").classList.add("active");
-        document.getElementById("page-input").classList.add("active");
-        //renderRecentTransactions();
-    } else {
-        document.getElementById("tab-riwayat-btn").classList.add("active");
-        document.getElementById("page-riwayat").classList.add("active");
-        //renderHistory();
-    }
+    document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
+    document.querySelectorAll(".page-content").forEach((page) => page.classList.remove("active"));
+
+    document.getElementById(isInput ? "tab-input-btn" : "tab-riwayat-btn").classList.add("active");
+    document.getElementById(isInput ? "page-input" : "page-riwayat").classList.add("active");
 }
 
 export function unlockApp() {
-    const input = document.getElementById("app-pin-input").value;
-    if (input === state.appPin) {
+    const inputEl = document.getElementById("app-pin-input");
+    if (inputEl.value === state.appPin) {
         document.getElementById("app-lock-screen").style.display = "none";
-        document.getElementById("app-pin-input").value = "";
+        inputEl.value = "";
         showToast("Aplikasi Berhasil Dibuka");
     } else {
         showToast("PIN Salah!");
-        document.getElementById("app-pin-input").value = "";
+        inputEl.value = "";
     }
 }
 
 export function setSubTab(subTab) {
     state.currentSubTab = subTab;
-    document
-        .querySelectorAll(".sub-tab-btn")
-        .forEach((btn) => btn.classList.remove("active"));
+    document.querySelectorAll(".sub-tab-btn").forEach((btn) => btn.classList.remove("active"));
 
     const subTabMap = {
         all: "subtab-all",
@@ -53,60 +46,49 @@ export function setSubTab(subTab) {
         Out: "subtab-out",
     };
 
-    if (subTabMap[subTab]) {
-        document.getElementById(subTabMap[subTab]).classList.add("active");
+    if (subTabMap[ subTab ]) {
+        document.getElementById(subTabMap[ subTab ]).classList.add("active");
     }
 
-    // Cukup filter DOM secara instan tanpa fetch IndexedDB
     filterHistoryDOM();
 }
 
 export function setMode(mode) {
     state.currentMode = mode;
-    document
-        .querySelectorAll(".mode-btn")
-        .forEach((btn) => btn.classList.remove("active"));
-    document
-        .querySelector(`.${mode.toLowerCase()}-mode`)
-        .classList.add("active");
+    const lowerMode = mode.toLowerCase();
+
+    document.querySelectorAll(".mode-btn").forEach((btn) => btn.classList.remove("active"));
+    document.querySelector(`.${lowerMode}-mode`).classList.add("active");
     document.getElementById("active-mode-label").innerText = mode;
 
-    const saveBtn = document.getElementById("btn-save");
-    saveBtn.className = `key-btn key-submit ${mode.toLowerCase()}-mode`;
+    document.getElementById("btn-save").className = `key-btn key-submit ${lowerMode}-mode`;
 
     const ketGroup = document.getElementById("group-keterangan");
-    if (mode === "Out") {
-        ketGroup.style.display = "flex";
-    } else {
-        ketGroup.style.display = "none";
-        document.getElementById("input-keterangan").value = "";
-    }
+    const isOut = mode === "Out";
+    ketGroup.style.display = isOut ? "flex" : "none";
+    if (!isOut) document.getElementById("input-keterangan").value = "";
 
     const transferTypeGroup = document.getElementById("group-transfer-type");
-    if (mode === "Transfer") {
-        transferTypeGroup.style.display = "grid";
-        setTransferType("qris");
-    } else {
-        transferTypeGroup.style.display = "none";
-    }
+    const isTransfer = mode === "Transfer";
+    transferTypeGroup.style.display = isTransfer ? "grid" : "none";
+    if (isTransfer) setTransferType("qris");
 }
 
 export function setTransferType(type) {
     state.currentTransferType = type;
-    document
-        .getElementById("btn-transfer-qris")
-        .classList.toggle("active", type === "qris");
-    document
-        .getElementById("btn-transfer-bank")
-        .classList.toggle("active", type === "bank");
+    document.getElementById("btn-transfer-qris").classList.toggle("active", type === "qris");
+    document.getElementById("btn-transfer-bank").classList.toggle("active", type === "bank");
 }
+
+// ==========================================================================
+// 2. KEYPAD & DISPLAY LOGIC
+// ==========================================================================
 
 export function pressKey(key) {
     if (key === "C") {
         state.rawAmount = "0";
     } else if (key === "BACK") {
-        state.rawAmount =
-            state.rawAmount.length > 1 ? state.rawAmount.slice(0, -1) : "0";
+        state.rawAmount = state.rawAmount.length > 1 ? state.rawAmount.slice(0, -1) : "0";
     } else if (key === "00") {
         if (state.rawAmount !== "0") state.rawAmount += "00";
     } else {
@@ -116,7 +98,6 @@ export function pressKey(key) {
             state.rawAmount += key;
         }
     }
-    //playSound("click");
     updateDisplay();
 }
 
@@ -125,10 +106,20 @@ export function updateDisplay() {
     document.getElementById("display-amount").innerText = formatRupiah(val);
 }
 
+export function getDisplayType(item) {
+    if (item.type === "Transfer") {
+        return item.subType === "bank" ? "Bank" : "QRIS";
+    }
+    return item.type;
+}
+
+// ==========================================================================
+// 3. OLAH & SIMPAN TRANSAKSI
+// ==========================================================================
+
 export async function saveTransaction() {
     const amount = parseInt(state.rawAmount, 10);
-    if (!amount || amount <= 0)
-        return showToast("Nominal transaksi tidak valid!");
+    if (!amount || amount <= 0) return showToast("Nominal transaksi tidak valid!");
 
     const noteInput = document.getElementById("input-keterangan").value.trim();
     let note = noteInput;
@@ -140,10 +131,7 @@ export async function saveTransaction() {
     if (!note) {
         if (state.currentMode === "Cash") note = "Pemasukan Cash";
         else if (state.currentMode === "Transfer") {
-            note =
-                state.currentTransferType === "qris"
-                    ? "Pemasukan QRIS"
-                    : "Pemasukan Bank";
+            note = state.currentTransferType === "qris" ? "Pemasukan QRIS" : "Pemasukan Bank";
         }
     }
 
@@ -154,8 +142,7 @@ export async function saveTransaction() {
     const data = {
         id: Date.now(),
         type: state.currentMode,
-        subType:
-            state.currentMode === "Transfer" ? state.currentTransferType : null,
+        subType: state.currentMode === "Transfer" ? state.currentTransferType : null,
         amount: amount,
         note: note,
         dateOnly: dateOnly,
@@ -164,24 +151,39 @@ export async function saveTransaction() {
     };
 
     await dbAdd(data);
-    await addToSyncQueue("create", 999999, data);
-
+    await addToSyncQueue("create", data.id, data);
+    processPendingSyncQueue();
     state.rawAmount = "0";
     updateDisplay();
     document.getElementById("input-keterangan").value = "";
-    renderRecentTransactions();
-    renderHistory();
+
+    await renderRecentTransactions();
+    await renderHistory();
+
     playSound("success");
     setMode("Cash");
     showToast("Transaksi berhasil disimpan!");
 }
 
-export function getDisplayType(item) {
-    if (item.type === "Transfer") {
-        return item.subType === "bank" ? "Bank" : "QRIS";
-    }
-    return item.type;
+export async function deleteTransaction(id) {
+    if (!confirm("Apakah Anda yakin ingin menghapus transaksi ini?")) return;
+
+    const transactions = await dbGetAll();
+    const data = transactions.find((tx) => tx.id === id);
+
+    if (!data) return showToast("Transaksi tidak ditemukan!");
+
+    await addToSyncQueue("delete", data.id, data);
+    await dbDelete(id);
+    processPendingSyncQueue();
+    await renderRecentTransactions();
+    await renderHistory();
+    showToast("Transaksi berhasil dihapus");
 }
+
+// ==========================================================================
+// 4. RENDER & FILTER UI
+// ==========================================================================
 
 export async function renderRecentTransactions() {
     const recentList = document.getElementById("recent-list");
@@ -193,8 +195,7 @@ export async function renderRecentTransactions() {
     const items = all.slice(0, 3);
 
     if (items.length === 0) {
-        recentList.innerHTML =
-            '<div class="empty-state">Belum ada transaksi.</div>';
+        recentList.innerHTML = '<div class="empty-state">Belum ada transaksi.</div>';
         return;
     }
 
@@ -226,11 +227,7 @@ export async function renderHistory() {
     const all = await dbGetAll();
     const dateFiltered = all.filter((i) => i.dateOnly === selectedDate);
 
-    // Perhitungan Statistik Total
-    let totalCash = 0,
-        totalQris = 0,
-        totalBank = 0,
-        totalOut = 0;
+    let totalCash = 0, totalQris = 0, totalBank = 0, totalOut = 0;
     dateFiltered.forEach((i) => {
         if (i.type === "Cash") totalCash += i.amount;
         else if (i.type === "Out") totalOut += i.amount;
@@ -243,21 +240,15 @@ export async function renderHistory() {
     const totalPemasukan = totalCash + totalQris + totalBank;
     const balance = totalCash - totalOut;
 
-    document.getElementById("stat-total-pemasukan").innerText =
-        formatRupiah(totalPemasukan);
-    document.getElementById("stat-total-cash").innerText =
-        formatRupiah(totalCash);
-    document.getElementById("stat-total-qris").innerText =
-        formatRupiah(totalQris);
-    document.getElementById("stat-total-bank").innerText =
-        formatRupiah(totalBank);
-    document.getElementById("stat-total-out").innerText =
-        formatRupiah(totalOut);
+    document.getElementById("stat-total-pemasukan").innerText = formatRupiah(totalPemasukan);
+    document.getElementById("stat-total-cash").innerText = formatRupiah(totalCash);
+    document.getElementById("stat-total-qris").innerText = formatRupiah(totalQris);
+    document.getElementById("stat-total-bank").innerText = formatRupiah(totalBank);
+    document.getElementById("stat-total-out").innerText = formatRupiah(totalOut);
     document.getElementById("stat-balance").innerText = formatRupiah(balance);
 
     if (dateFiltered.length === 0) {
-        historyList.innerHTML =
-            '<div class="empty-state">Tidak ada transaksi pada tanggal ini.</div>';
+        historyList.innerHTML = '<div class="empty-state">Tidak ada transaksi pada tanggal ini.</div>';
         document.getElementById("history-count").innerText = "0 Catatan";
         return;
     }
@@ -265,12 +256,9 @@ export async function renderHistory() {
     dateFiltered.sort((a, b) => b.id - a.id);
     dateFiltered.forEach((item) => {
         const displayType = getDisplayType(item);
-        const isTF = item.type === "Transfer";
-
         const el = document.createElement("div");
         el.className = "history-item";
 
-        // Simpan atribut data untuk filter cepat via DOM
         el.dataset.type = item.type;
         el.dataset.subtype = item.subType || "";
 
@@ -291,7 +279,6 @@ export async function renderHistory() {
         historyList.appendChild(el);
     });
 
-    // Terapkan filter sub-tab yang sedang aktif ke elemen DOM yang baru dibuat
     filterHistoryDOM();
 }
 
@@ -301,36 +288,25 @@ export function filterHistoryDOM() {
     let visibleCount = 0;
 
     items.forEach((el) => {
-        const type = el.dataset.type;
-        const subType = el.dataset.subtype;
+        const { type, subtype: subType } = el.dataset;
 
         let shouldShow = false;
-        if (state.currentSubTab === "all") {
-            shouldShow = true;
-        } else if (state.currentSubTab === "Cash") {
-            shouldShow = type === "Cash";
-        } else if (state.currentSubTab === "Out") {
-            shouldShow = type === "Out";
-        } else if (state.currentSubTab === "QRIS") {
-            shouldShow =
-                type === "Transfer" && (subType === "qris" || subType === "");
-        } else if (state.currentSubTab === "Bank") {
-            shouldShow = type === "Transfer" && subType === "bank";
-        }
+        if (state.currentSubTab === "all") shouldShow = true;
+        else if (state.currentSubTab === "Cash") shouldShow = type === "Cash";
+        else if (state.currentSubTab === "Out") shouldShow = type === "Out";
+        else if (state.currentSubTab === "QRIS") shouldShow = type === "Transfer" && (subType === "qris" || subType === "");
+        else if (state.currentSubTab === "Bank") shouldShow = type === "Transfer" && subType === "bank";
 
         if (shouldShow) {
-            el.style.display = ""; // Mengembalikan ke display bawaan CSS (flex/block)
+            el.style.display = "";
             visibleCount++;
         } else {
             el.style.display = "none";
         }
     });
 
-    // Perbarui jumlah catatan yang terlihat
-    document.getElementById("history-count").innerText =
-        `${visibleCount} Catatan`;
+    document.getElementById("history-count").innerText = `${visibleCount} Catatan`;
 
-    // Kelola pesan empty state jika tidak ada item yang cocok dengan sub-tab
     let emptyState = historyList.querySelector(".empty-state-subtab");
     if (visibleCount === 0 && items.length > 0) {
         if (!emptyState) {
@@ -345,32 +321,26 @@ export function filterHistoryDOM() {
     }
 }
 
-export async function deleteTransaction(id) {
-    if (confirm("Apakah Anda yakin ingin menghapus transaksi ini?")) {
-        await dbDelete(id);
-        renderRecentTransactions();
-        renderHistory();
-        showToast("Transaksi berhasil dihapus");
-    }
-}
+// ==========================================================================
+// 5. MANAJEMEN MODAL (EDIT & PIN)
+// ==========================================================================
 
-export function openEditModal(id) {
-    dbGetAll().then((all) => {
-        const item = all.find((t) => t.id === id);
-        if (!item) return;
+export async function openEditModal(id) {
+    const all = await dbGetAll();
+    const item = all.find((t) => t.id === id);
+    if (!item) return;
 
-        document.getElementById("edit-id").value = item.id;
-        let editValue = item.type;
-        if (item.type === "Transfer") {
-            editValue =
-                item.subType === "bank" ? "Transfer-bank" : "Transfer-qris";
-        }
+    const defaultNotes = [ "Pemasukan Cash", "Pemasukan QRIS", "Pemasukan Bank" ];
 
-        document.getElementById("edit-type").value = editValue;
-        document.getElementById("edit-amount").value = item.amount;
-        document.getElementById("edit-keterangan").value = item.note === "Pemasukan Cash" ? "" : item.note === "Pemasukan QRIS" ? "" : item.note === "Pemasukan Bank" ? "" : item.note;
-        document.getElementById("edit-modal").classList.add("active");
-    });
+    document.getElementById("edit-id").value = item.id;
+    document.getElementById("edit-type").value =
+        item.type === "Transfer"
+            ? (item.subType === "bank" ? "Transfer-bank" : "Transfer-qris")
+            : item.type;
+
+    document.getElementById("edit-amount").value = item.amount;
+    document.getElementById("edit-keterangan").value = defaultNotes.includes(item.note) ? "" : item.note;
+    document.getElementById("edit-modal").classList.add("active");
 }
 
 export function closeEditModal() {
@@ -390,8 +360,7 @@ export async function handleEditSubmit(e) {
     if (existing) {
         if (selectedType.startsWith("Transfer-")) {
             existing.type = "Transfer";
-            existing.subType =
-                selectedType === "Transfer-bank" ? "bank" : "qris";
+            existing.subType = selectedType === "Transfer-bank" ? "bank" : "qris";
         } else {
             existing.type = selectedType;
             existing.subType = null;
@@ -403,12 +372,13 @@ export async function handleEditSubmit(e) {
             (existing.type === "Cash"
                 ? "Pemasukan Cash"
                 : existing.type === "Out"
-                  ? "Pengeluaran"
-                  : existing.subType === "bank" ? "Pemasukan Bank" : "Pemasukan QRIS");
-
+                    ? "Pengeluaran"
+                    : existing.subType === "bank" ? "Pemasukan Bank" : "Pemasukan QRIS");
         await dbUpdate(existing);
-        renderRecentTransactions();
-        renderHistory();
+        await addToSyncQueue("update", existing.id, existing);
+        processPendingSyncQueue();
+        await renderRecentTransactions();
+        await renderHistory();
         closeEditModal();
         showToast("Transaksi diperbarui!");
     }
@@ -432,10 +402,8 @@ export function handleChangePinSubmit(e) {
     const confirmPin = document.getElementById("pin-confirm").value;
 
     if (oldPin !== state.appPin) return showToast("PIN saat ini tidak sesuai!");
-    if (newPin.length !== 4 || isNaN(newPin))
-        return showToast("PIN Baru harus 4 digit angka!");
-    if (newPin !== confirmPin)
-        return showToast("Konfirmasi PIN Baru tidak cocok!");
+    if (newPin.length !== 4 || isNaN(newPin)) return showToast("PIN Baru harus 4 digit angka!");
+    if (newPin !== confirmPin) return showToast("Konfirmasi PIN Baru tidak cocok!");
 
     state.appPin = newPin;
     localStorage.setItem("app_pin", newPin);

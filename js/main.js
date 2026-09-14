@@ -1,13 +1,15 @@
 import { loadComponents } from "./component-loader.js";
 import { getTodayDateString, keepScreenOn } from "./utils.js";
 import { seedInitialDataIfEmpty } from "./db.js";
-import { firebaseLogin } from "./sync.js";
+import { initFirebase } from "./firebase-config.js";
+import { firebaseLogin, processPendingSyncQueue } from "./sync.js";
 import * as UI from "./ui.js";
 import * as Storage from "./storage.js";
 import { initTestGlobals } from "./test.js";
 
 // Binding fungsi UI ke Objek Window agar kompatibel dengan atribut HTML inline (onclick, onchange, onSubmit)
 window.firebaseLogin = firebaseLogin;
+window.processPendingSyncQueue = processPendingSyncQueue;
 window.renderHistory = UI.renderHistory;
 window.switchTab = UI.switchTab;
 window.unlockApp = UI.unlockApp;
@@ -36,6 +38,7 @@ initTestGlobals();
 document.addEventListener("DOMContentLoaded", async () => {
     // 1. Load HTML Komponen
     await loadComponents();
+    initFirebase();
 
     // 2. Inisialisasi State & Event UI
     const lockScreen = document.getElementById("app-lock-screen");
@@ -50,6 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     UI.renderHistory();
     keepScreenOn();
 });
+
 // Inisialisasi Aplikasi Saat DOM Loaded
 document.addEventListener("DOMContentLoaded", async () => {
     const lockScreen = document.getElementById("app-lock-screen");
@@ -65,16 +69,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     keepScreenOn();
 });
 
-// Pendaftaran Service Worker (Dipindahkan dari index.html)
-if ("serviceWorker" in navigator) {
+// Hanya daftarkan Service Worker jika BUKAN di localhost / Acode Preview
+if ("serviceWorker" in navigator ) {
     window.addEventListener("load", () => {
         navigator.serviceWorker
-            .register("./sw.js")
-            .then((registration) => {
-                console.log("Service Worker aktif:", registration.scope);
-            })
-            .catch((error) => {
-                console.error("Service Worker gagal:", error);
-            });
+            .register("./js/sw.js")
+            .then((reg) => console.log("Service Worker aktif:", reg.scope))
+            .catch((err) => console.error("Service Worker gagal:", err));
     });
 }
