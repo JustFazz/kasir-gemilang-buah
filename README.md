@@ -1,7 +1,12 @@
 # Changelog
 Next - Future Plan
  * Bisa diakses lewat hp lain diluar jaringan
- * Hilangkan fitur edit nominal dan hapus transaksi 
+ * Hilangkan fitur edit nominal dan hapus transaksi
+## v2 - Pengoptimalan & persiapan online state
+ * Pengoptimalan Service Worker
+ * Memecah Script dan HTML menjadi komponen
+ * Update suara keypad & matikan
+ * Rancangan persiapan Firebase sync
 ## v1.3.1 - 
  * Bagi jenis transaksi TF menjadi QRIS dan Bank
  * Tambah suara keypad dan notif tersimpan

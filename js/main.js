@@ -1,0 +1,80 @@
+import { loadComponents } from "./component-loader.js";
+import { getTodayDateString, keepScreenOn } from "./utils.js";
+import { seedInitialDataIfEmpty } from "./db.js";
+import { firebaseLogin } from "./sync.js";
+import * as UI from "./ui.js";
+import * as Storage from "./storage.js";
+import { initTestGlobals } from "./test.js";
+
+// Binding fungsi UI ke Objek Window agar kompatibel dengan atribut HTML inline (onclick, onchange, onSubmit)
+window.firebaseLogin = firebaseLogin;
+window.renderHistory = UI.renderHistory;
+window.switchTab = UI.switchTab;
+window.unlockApp = UI.unlockApp;
+window.setSubTab = UI.setSubTab;
+window.setMode = UI.setMode;
+window.setTransferType = UI.setTransferType;
+window.pressKey = UI.pressKey;
+window.saveTransaction = UI.saveTransaction;
+window.deleteTransaction = UI.deleteTransaction;
+window.openEditModal = UI.openEditModal;
+window.closeEditModal = UI.closeEditModal;
+window.handleEditSubmit = UI.handleEditSubmit;
+window.openChangePinModal = UI.openChangePinModal;
+window.closeChangePinModal = UI.closeChangePinModal;
+window.handleChangePinSubmit = UI.handleChangePinSubmit;
+
+window.exportCSV = Storage.exportCSV;
+window.importCSV = Storage.importCSV;
+window.exportJSONBackup = Storage.exportJSONBackup;
+window.importJSONRestore = Storage.importJSONRestore;
+
+// Inisialisasi variabel tes di global scope
+initTestGlobals();
+
+// Load Page
+document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Load HTML Komponen
+    await loadComponents();
+
+    // 2. Inisialisasi State & Event UI
+    const lockScreen = document.getElementById("app-lock-screen");
+    if (lockScreen) lockScreen.style.display = "flex";
+
+    const datePicker = document.getElementById("history-date-picker");
+    if (datePicker) datePicker.value = getTodayDateString();
+
+    UI.updateDisplay();
+    await seedInitialDataIfEmpty();
+    UI.renderRecentTransactions();
+    UI.renderHistory();
+    keepScreenOn();
+});
+// Inisialisasi Aplikasi Saat DOM Loaded
+document.addEventListener("DOMContentLoaded", async () => {
+    const lockScreen = document.getElementById("app-lock-screen");
+    if (lockScreen) lockScreen.style.display = "flex";
+
+    const datePicker = document.getElementById("history-date-picker");
+    if (datePicker) datePicker.value = getTodayDateString();
+
+    UI.updateDisplay();
+    await seedInitialDataIfEmpty();
+    UI.renderRecentTransactions();
+    UI.renderHistory();
+    keepScreenOn();
+});
+
+// Pendaftaran Service Worker (Dipindahkan dari index.html)
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker
+            .register("./sw.js")
+            .then((registration) => {
+                console.log("Service Worker aktif:", registration.scope);
+            })
+            .catch((error) => {
+                console.error("Service Worker gagal:", error);
+            });
+    });
+}

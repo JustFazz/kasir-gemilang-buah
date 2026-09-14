@@ -40,7 +40,6 @@ input,
 textarea,
 select {
     -webkit-tap-highlight-color: transparent;
-    tap-highlight-color: transparent;
 }
 
 body {

@@ -1,0 +1,24 @@
+<div class="app-lock-screen" id="app-lock-screen">
+    <div class="lock-card">
+        <div class="lock-icon-wrapper">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h2>Aplikasi Terkunci</h2>
+        <p>Masukkan PIN untuk mengakses aplikasi</p>
+        <input
+            type="password"
+            id="app-pin-input"
+            maxlength="4"
+            class="form-input pin-field"
+            placeholder="••••"
+            autocomplete="off"
+        />
+        <button
+            type="button"
+            class="btn btn-primary btn-block"
+            onclick="unlockApp()"
+        >
+            <i class="fa-solid fa-lock-open"></i> Buka Aplikasi
+        </button>
+    </div>
+</div>
