@@ -773,7 +773,7 @@ async function handleEditSubmit(e) {
 
 // SOUND EFFECT
 const sounds = {
-    click: new Audio("./sounds/click.wav"),
+    click: new Audio("./sounds/click.mp3"),
     success: new Audio("./sounds/success.mp3"),
 };
 
