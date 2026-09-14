@@ -1,11 +1,11 @@
-const CACHE_NAME = 'v2-b9;
+const CACHE_NAME = 'v2-b9'
 
 const APP_SHELL = [
     './',
     './index.html',
     './style.css',
     './manifest.json',
-    
+
     // Modul JavaScript
     './js/config.js',
     './js/firebase-config.js',
