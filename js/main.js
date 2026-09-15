@@ -54,26 +54,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     keepScreenOn();
 });
 
-// Inisialisasi Aplikasi Saat DOM Loaded
-document.addEventListener("DOMContentLoaded", async () => {
-    const lockScreen = document.getElementById("app-lock-screen");
-    if (lockScreen) lockScreen.style.display = "flex";
-
-    const datePicker = document.getElementById("history-date-picker");
-    if (datePicker) datePicker.value = getTodayDateString();
-
-    UI.updateDisplay();
-    await seedInitialDataIfEmpty();
-    UI.renderRecentTransactions();
-    UI.renderHistory();
-    keepScreenOn();
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        keepScreenOn();
+    }
 });
 
-// Hanya daftarkan Service Worker jika BUKAN di localhost / Acode Preview
 if ("serviceWorker" in navigator ) {
     window.addEventListener("load", () => {
         navigator.serviceWorker
-            .register("./js/sw.js")
+            .register("./sw.js")
             .then((reg) => console.log("Service Worker aktif:", reg.scope))
             .catch((err) => console.error("Service Worker gagal:", err));
     });

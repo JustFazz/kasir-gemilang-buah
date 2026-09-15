@@ -2,6 +2,8 @@
 Next - Future Plan
  * Bisa diakses lewat hp lain diluar jaringan
  * Hilangkan fitur edit nominal dan hapus transaksi
+## v2.1.2 - Minor fix
+ * Pindah sw.js
 ## v2.1.1 - Minor fix
  * Menghapus tombol test Sync
 ## v2.1 - Penerapan Awal Online
