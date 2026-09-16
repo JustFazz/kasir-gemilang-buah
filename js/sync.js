@@ -30,7 +30,7 @@ export function firebaseLogin() {
 function getFirebaseDatePath(dateOnly) {
     const [ year, month, day ] = dateOnly.split("-");
 
-    return `data/${year}/${month}/${day}`;
+    return `${firebase.auth().currentUser?.uid}/${year}/${month}/${day}`;
 }
 
 // DB
@@ -123,6 +123,7 @@ export async function processSyncQueueItem(queueItem) {
 }
 
 let syncRunning = false;
+let syncSuccess = false;
 
 export async function processPendingSyncQueue() {
     if (syncRunning) return;
@@ -152,8 +153,10 @@ export async function processPendingSyncQueue() {
 
             if (!result.success) {
                 console.log("BREAK");
+                syncSuccess = false;
                 break;
             }
+            syncSuccess = true;
         }
 
     } catch (error) {
@@ -161,7 +164,7 @@ export async function processPendingSyncQueue() {
 
     } finally {
         syncRunning = false;
-        showToast("Sync Selesai")
+        showToast("Sync " + (syncSuccess ? "Selesai" : "Pending"))
     }
 }
 

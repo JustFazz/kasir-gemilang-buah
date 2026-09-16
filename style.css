@@ -882,7 +882,7 @@ body {
     font-weight: 600;
     box-shadow: var(--shadow-md);
     transition: transform 0.3s ease;
-    z-index: 2000;
+    z-index: 10000;
 }
 
 .toast.show {
