@@ -59,12 +59,3 @@ document.addEventListener("visibilitychange", () => {
         keepScreenOn();
     }
 });
-
-if ("serviceWorker" in navigator ) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker
-            .register("./sw.js")
-            .then((reg) => console.log("Service Worker aktif:", reg.scope))
-            .catch((err) => console.error("Service Worker gagal:", err));
-    });
-}
