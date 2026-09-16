@@ -79,6 +79,17 @@ export function setTransferType(type) {
     document.getElementById("btn-transfer-qris").classList.toggle("active", type === "qris");
     document.getElementById("btn-transfer-bank").classList.toggle("active", type === "bank");
 }
+export async function displayVersion() {
+    const response = await fetch("./sw.js");
+    const text = await response.text();
+
+    const firstLine = text.split(/\r?\n/)[ 0 ];
+
+    const APP_VERSION = firstLine
+        .match(/["']([^"']+)["']/)?.[ 1 ];
+
+    document.getElementById("version").textContent = APP_VERSION;
+}
 
 // ==========================================================================
 // 2. KEYPAD & DISPLAY LOGIC

@@ -33,7 +33,6 @@ window.importJSONRestore = Storage.importJSONRestore;
 
 // Inisialisasi variabel tes di global scope
 initTestGlobals();
-
 // Load Page
 document.addEventListener("DOMContentLoaded", async () => {
     // 1. Load HTML Komponen
@@ -48,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (datePicker) datePicker.value = getTodayDateString();
 
     UI.updateDisplay();
+    UI.displayVersion();
     await seedInitialDataIfEmpty();
     UI.renderRecentTransactions();
     UI.renderHistory();

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v2.1.2.1-b13'
+const CACHE_NAME = 'v2.1.3.1-b15'
 
 const APP_SHELL = [
     './',
