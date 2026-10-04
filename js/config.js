@@ -7,6 +7,6 @@ export const state = {
 };
 
 export const DB_NAME = "CatatanTransaksiDB";
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 export const STORE_NAME = "transactions";
 export const SYNC_QUEUE_STORE = "syncQueue";
