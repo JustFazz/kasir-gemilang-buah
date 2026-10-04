@@ -2,6 +2,9 @@
 Next - Future Plan
  * Bisa diakses lewat hp lain diluar jaringan
  * Hilangkan fitur edit nominal dan hapus transaksi
+## v2.3 - Update Service Worker
+ * Update sw
+ * minor fix & update
 ## v2.2 - Update Sound System
  * Menggunakan Oscilator untuk suara Success
 ## v2.1.4 - Update firebase auth system

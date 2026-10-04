@@ -4,18 +4,26 @@ import { getTodayDateString } from "./utils.js";
 export function openDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
+
         request.onupgradeneeded = (e) => {
             const db = e.target.result;
+
+            console.log(
+                `DB upgrade: ${e.oldVersion} → ${e.newVersion}`
+            );
+
             let transactionStore;
+
             if (db.objectStoreNames.contains(STORE_NAME)) {
-                transactionStore = event.target
-                    .transaction
+                transactionStore = e.target.transaction
                     .objectStore(STORE_NAME);
             } else {
                 transactionStore = db.createObjectStore(
-                    STORE_NAME, { keyPath: "id" }
+                    STORE_NAME,
+                    { keyPath: "id" }
                 );
             }
+
             // DATE INDEX
             if (!transactionStore.indexNames.contains("dateOnly")) {
                 transactionStore.createIndex(
@@ -23,13 +31,45 @@ export function openDB() {
                     "dateOnly",
                     { unique: false }
                 );
+
+                console.log("Index dateOnly created");
             }
+
+            // SYNC QUEUE
             if (!db.objectStoreNames.contains(SYNC_QUEUE_STORE)) {
-                db.createObjectStore(SYNC_QUEUE_STORE, { keyPath: "queueId" });
+                db.createObjectStore(
+                    SYNC_QUEUE_STORE,
+                    { keyPath: "queueId" }
+                );
+
+                console.log("syncQueue store created");
             }
         };
-        request.onsuccess = (e) => resolve(e.target.result);
-        request.onerror = (e) => reject(e.target.error);
+
+        request.onsuccess = (e) => {
+            const db = e.target.result;
+
+            console.log(
+                `DB opened: ${db.name}, version ${db.version}`
+            );
+
+            resolve(db);
+        };
+
+        request.onerror = (e) => {
+            console.error(
+                "IndexedDB error:",
+                e.target.error
+            );
+
+            reject(e.target.error);
+        };
+
+        request.onblocked = () => {
+            console.warn(
+                "IndexedDB upgrade BLOCKED."
+            );
+        };
     });
 }
 
