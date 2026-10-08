@@ -30,22 +30,23 @@
         </div>
     </div>
 
-    <div class="sub-tabs-container five-tabs">
+    <div class="sub-tabs-container six-tabs">
         <button class="sub-tab-btn active" id="subtab-all" onclick="setSubTab('all')">All</button>
         <button class="sub-tab-btn" id="subtab-cash" onclick="setSubTab('Cash')">Cash</button>
-        <button class="sub-tab-btn" id="subtab-qris" onclick="setSubTab('QRIS')">QRIS</button>
+        <button class="sub-tab-btn" id="subtab-qris" onclick="setSubTab('QRIS')">QRIS 1</button>
+        <button class="sub-tab-btn" id="subtab-qris2" onclick="setSubTab('QRIS2')">QRIS 2</button>
         <button class="sub-tab-btn" id="subtab-bank" onclick="setSubTab('Bank')">Bank</button>
         <button class="sub-tab-btn" id="subtab-out" onclick="setSubTab('Out')">Out</button>
     </div>
 
-    <div class="summary-grid">
-        <div class="summary-card total-pemasukan full-width">
+    <div class="summary-card total-pemasukan full-width">
             <div class="summary-icon"><i class="fa-solid fa-sack-dollar"></i></div>
             <div class="summary-info">
                 <span class="summary-label">Total Omzet</span>
                 <h3 id="stat-total-pemasukan">Rp 0</h3>
             </div>
         </div>
+    <div class="summary-grid">
         <div class="summary-card cash">
             <div class="summary-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
             <div class="summary-info">
@@ -53,11 +54,25 @@
                 <h3 id="stat-total-cash">Rp 0</h3>
             </div>
         </div>
+        <div class="summary-card out">
+            <div class="summary-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+            <div class="summary-info">
+                <span class="summary-label">Total Out</span>
+                <h3 id="stat-total-out">Rp 0</h3>
+            </div>
+        </div>
         <div class="summary-card qris">
             <div class="summary-icon"><i class="fa-solid fa-qrcode"></i></div>
             <div class="summary-info">
-                <span class="summary-label">Total QRIS</span>
+                <span class="summary-label">Total QRIS 1</span>
                 <h3 id="stat-total-qris">Rp 0</h3>
+            </div>
+        </div>
+        <div class="summary-card qris2">
+            <div class="summary-icon"><i class="fa-solid fa-qrcode"></i></div>
+            <div class="summary-info">
+                <span class="summary-label">Total QRIS 2</span>
+                <h3 id="stat-total-qris2">Rp 0</h3>
             </div>
         </div>
         <div class="summary-card transfer">
@@ -65,13 +80,6 @@
             <div class="summary-info">
                 <span class="summary-label">Total Bank</span>
                 <h3 id="stat-total-bank">Rp 0</h3>
-            </div>
-        </div>
-        <div class="summary-card out">
-            <div class="summary-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
-            <div class="summary-info">
-                <span class="summary-label">Total Out</span>
-                <h3 id="stat-total-out">Rp 0</h3>
             </div>
         </div>
         <div class="summary-card balance full-width">
@@ -88,7 +96,7 @@
             <h2>Daftar Transaksi</h2>
             <div class="badge-count">
             <span class="badge-count" id="history-count">0 Catatan</span>
-            <i id="version" class="fa-solid fa-arrows-rotate btn-expand" ></i>
+            <i id="version" class="fa-solid fa-arrows-rotate btn-expand" onclick="processPendingSyncQueue()"></i>
             </div>
         </div>
         <div class="history-list" id="history-list"></div>

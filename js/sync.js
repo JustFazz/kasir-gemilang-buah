@@ -132,12 +132,13 @@ export async function processPendingSyncQueue() {
 
     try {
         syncSuccess = false;
-        document.getElementById("version").style.color = syncSuccess ? "#3b82f6" : "#000000";
+        document.getElementById("version").style.color = syncSuccess ? "#3b82f6" : "#8e8b8b";
         while (true) {
             const pendingQueue = (await getPendingSyncQueue())
                 .sort((a, b) => a.createdAt - b.createdAt);
 
             if (pendingQueue.length === 0) {
+                syncSuccess = true;
                 break;
             }
 
@@ -158,7 +159,6 @@ export async function processPendingSyncQueue() {
                 syncSuccess = false;
                 break;
             }
-            syncSuccess = true;
         }
 
     } catch (error) {
@@ -166,7 +166,7 @@ export async function processPendingSyncQueue() {
 
     } finally {
         syncRunning = false;
-        document.getElementById("version").style.color = syncSuccess ? "#3b82f6" : "#000000";
+        document.getElementById("version").style.color = syncSuccess ? "#3b82f6" : "#e50000";
     }
 }
 

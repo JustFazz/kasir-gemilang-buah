@@ -1,10 +1,10 @@
-import { dbGetAll, dbClear, dbAdd, dbUpdate } from "./db.js";
+import { dbGetDate, dbClear, dbAdd, dbUpdate } from "./db.js";
 import { showToast, getTodayDateString } from "./utils.js";
 import { renderRecentTransactions, renderHistory } from "./ui.js";
 
 export async function exportCSV() {
     const selectedDate = document.getElementById("history-date-picker").value;
-    const all = await dbGetAll();
+    const all = await dbGetDate(selectedDate);
     const filtered = all.filter((i) => i.dateOnly === selectedDate);
 
     if (filtered.length === 0) {
@@ -16,11 +16,18 @@ export async function exportCSV() {
         csv += `"${i.id}","Cash","${i.amount}","${i.note}","${i.dateOnly}","${i.timeOnly}"\n`;
     });
 
-    csv += "\n<<< TRANSAKSI QRIS >>>\nID,Jenis,Nominal,Keterangan,Tanggal,Jam,Status Verifikasi\n";
+    csv += "\n<<< TRANSAKSI QRIS 1>>>\nID,Jenis,Nominal,Keterangan,Tanggal,Jam,Status Verifikasi\n";
     filtered
         .filter((i) => i.type === "Transfer" && (i.subType === "qris" || !i.subType))
         .forEach((i) => {
-            csv += `"${i.id}","QRIS","${i.amount}","${i.note}","${i.dateOnly}","${i.timeOnly}","${i.verified ? "Diverifikasi" : "Belum"}"\n`;
+            csv += `"${i.id}","QRIS 1","${i.amount}","${i.note}","${i.dateOnly}","${i.timeOnly}","${i.verified ? "Diverifikasi" : "Belum"}"\n`;
+        });
+
+    csv += "\n<<< TRANSAKSI QRIS 2>>>\nID,Jenis,Nominal,Keterangan,Tanggal,Jam,Status Verifikasi\n";
+    filtered
+        .filter((i) => i.type === "Transfer" && (i.subType === "qris2" || !i.subType))
+        .forEach((i) => {
+            csv += `"${i.id}","QRIS 2","${i.amount}","${i.note}","${i.dateOnly}","${i.timeOnly}","${i.verified ? "Diverifikasi" : "Belum"}"\n`;
         });
 
     csv += "\n<<< TRANSAKSI BANK >>>\nID,Jenis,Nominal,Keterangan,Tanggal,Jam,Status Verifikasi\n";
@@ -64,9 +71,9 @@ export function importCSV(e) {
                 let mainType = rawType;
                 let subType = null;
 
-                if (rawType === "QRIS" || rawType === "Bank" || rawType === "Transfer") {
+                if (rawType === "QRIS 1" || rawType === "QRIS 2" || rawType === "Bank" || rawType === "Transfer") {
                     mainType = "Transfer";
-                    subType = rawType === "Bank" ? "bank" : "qris";
+                    subType = rawType === "Bank" ? "bank" : rawType === "QRIS 2" ? "qris2" : "qris";
                 }
 
                 await dbUpdate({

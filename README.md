@@ -2,6 +2,8 @@
 Next - Future Plan
  * Bisa diakses lewat hp lain diluar jaringan
  * Hilangkan fitur edit nominal dan hapus transaksi
+## v2.4 - QRIS 2
+ * Menambah metode qris 2
 ## v2.3 - Update Service Worker
  * Update sw
  * minor fix & update

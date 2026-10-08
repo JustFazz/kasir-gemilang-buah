@@ -44,6 +44,7 @@ export function setSubTab(subTab) {
         all: "subtab-all",
         Cash: "subtab-cash",
         QRIS: "subtab-qris",
+        QRIS2: "subtab-qris2",
         Bank: "subtab-bank",
         Out: "subtab-out",
     };
@@ -80,12 +81,13 @@ export function setMode(mode) {
     const transferTypeGroup = document.getElementById("group-transfer-type");
     const isTransfer = mode === "Transfer";
     transferTypeGroup.style.display = isTransfer ? "grid" : "none";
-    if (isTransfer) setTransferType("qris");
+    if (isTransfer && state.currentTransferType === "bank") setTransferType("qris");
 }
 
 export function setTransferType(type) {
     state.currentTransferType = type;
     document.getElementById("btn-transfer-qris").classList.toggle("active", type === "qris");
+    document.getElementById("btn-transfer-qris2").classList.toggle("active", type === "qris2");
     document.getElementById("btn-transfer-bank").classList.toggle("active", type === "bank");
 }
 export async function displayVersion() {
@@ -128,7 +130,7 @@ export function updateDisplay() {
 
 export function getDisplayType(item) {
     if (item.type === "Transfer") {
-        return item.subType === "bank" ? "Bank" : "QRIS";
+        return item.subType === "bank" ? "Bank" : item.subType === "qris" ? "QRIS1" : "QRIS2";
     }
     return item.type;
 }
@@ -151,7 +153,7 @@ export async function saveTransaction() {
     if (!note) {
         if (state.currentMode === "Cash") note = "Pemasukan Cash";
         else if (state.currentMode === "Transfer") {
-            note = state.currentTransferType === "qris" ? "Pemasukan QRIS" : "Pemasukan Bank";
+            note = state.currentTransferType === "bank" ? "Pemasukan Bank" : "Pemasukan QRIS";
         }
     }
 
@@ -308,6 +310,7 @@ export async function renderHistory() {
 
     let totalCash = 0;
     let totalQris = 0;
+    let totalQris2 = 0;
     let totalBank = 0;
     let totalOut = 0;
 
@@ -319,8 +322,10 @@ export async function renderHistory() {
         } else if (i.type === "Transfer") {
             if (i.subType === "bank") {
                 totalBank += i.amount;
-            } else {
+            } else if (i.subType === "qris") {
                 totalQris += i.amount;
+            } else {
+                totalQris2 += i.amount;
             }
         }
     });
@@ -328,6 +333,7 @@ export async function renderHistory() {
     const totalPemasukan =
         totalCash +
         totalQris +
+        totalQris2 +
         totalBank;
 
     const balance =
@@ -343,6 +349,9 @@ export async function renderHistory() {
 
     document.getElementById("stat-total-qris").innerText =
         formatRupiah(totalQris);
+
+    document.getElementById("stat-total-qris2").innerText =
+        formatRupiah(totalQris2);
 
     document.getElementById("stat-total-bank").innerText =
         formatRupiah(totalBank);
@@ -477,6 +486,7 @@ export function filterHistoryDOM() {
         else if (state.currentSubTab === "Cash") shouldShow = type === "Cash";
         else if (state.currentSubTab === "Out") shouldShow = type === "Out";
         else if (state.currentSubTab === "QRIS") shouldShow = type === "Transfer" && (subType === "qris" || subType === "");
+        else if (state.currentSubTab === "QRIS2") shouldShow = type === "Transfer" && subType === "qris2";
         else if (state.currentSubTab === "Bank") shouldShow = type === "Transfer" && subType === "bank";
 
         if (shouldShow) {
@@ -540,7 +550,7 @@ export async function handleEditSubmit(e) {
     if (existing) {
         if (selectedType.startsWith("Transfer-")) {
             existing.type = "Transfer";
-            existing.subType = selectedType === "Transfer-bank" ? "bank" : "qris";
+            existing.subType = selectedType === "Transfer-bank" ? "bank" : selectedType === "Transfer-qris" ? "qris" : "qris2";
         } else {
             existing.type = selectedType;
             existing.subType = null;

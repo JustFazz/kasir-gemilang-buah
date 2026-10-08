@@ -289,15 +289,17 @@ body {
 }
 
 /* SUB-TAB 5 KOLOM */
-.sub-tabs-container.five-tabs {
-    grid-template-columns: repeat(5, 1fr);
+.sub-tabs-container.six-tabs {
+    grid-template-columns: repeat(6, 1fr);
 }
 
 /* BADGE & SUMMARY QRIS */
-.type-badge.QRIS { background: #e0e7ff; color: #4338ca; }
+.type-badge.QRIS1 { background: #e0e7ff; color: #4338ca; }
+.type-badge.QRIS2 { background: #f4f9f8; color: #38caa8; }
 .type-badge.Bank { background: var(--transfer-bg); color: var(--transfer-color); }
 
 .summary-card.qris .summary-icon { background: #e0e7ff; color: #4338ca; }
+.summary-card.qris2 .summary-icon { background: #f4f9f8; color: #38caa8; }
 
 /* DISPLAY NOMINAL */
 .display-container {
