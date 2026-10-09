@@ -295,11 +295,11 @@ body {
 
 /* BADGE & SUMMARY QRIS */
 .type-badge.QRIS1 { background: #e0e7ff; color: #4338ca; }
-.type-badge.QRIS2 { background: #f4f9f8; color: #38caa8; }
+.type-badge.QRIS2 { background: #f4f9f8; color: #b138ca; }
 .type-badge.Bank { background: var(--transfer-bg); color: var(--transfer-color); }
 
 .summary-card.qris .summary-icon { background: #e0e7ff; color: #4338ca; }
-.summary-card.qris2 .summary-icon { background: #f4f9f8; color: #38caa8; }
+.summary-card.qris2 .summary-icon { background: #f4f9f8; color: #b138ca; }
 
 /* DISPLAY NOMINAL */
 .display-container {
