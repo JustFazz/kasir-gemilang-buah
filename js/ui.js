@@ -526,7 +526,7 @@ export async function openEditModal(id) {
     document.getElementById("edit-id").value = item.id;
     document.getElementById("edit-type").value =
         item.type === "Transfer"
-            ? (item.subType === "bank" ? "Transfer-bank" : "Transfer-qris")
+            ? (item.subType === "bank" ? "Transfer-bank" : "qris2" ? "Transfer-qris2" : "Transfer-qris")
             : item.type;
 
     document.getElementById("edit-amount").value = item.amount;
