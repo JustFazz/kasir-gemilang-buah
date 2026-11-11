@@ -1,4 +1,4 @@
-const SW_VERSION = 'v2.4.1-b25';
+const SW_VERSION = 'v2.4.1-b26';
 const CACHE_NAME = `kasir-${SW_VERSION}`;
 
 const APP_SHELL = [
